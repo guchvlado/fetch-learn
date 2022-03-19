@@ -146,66 +146,26 @@ window.addEventListener("DOMContentLoaded", () => {
             this.image = image;
             this.altImage = altImage;
             this.price = price;
-            this.parentNode = parentNode;
-        }
-
-        getTitle() {
-            const titleElement = document.createElement("h3");
-            titleElement.classList.add('menu__item-subtitle');
-            titleElement.textContent = this.title;
-            return titleElement;
-        }
-
-        getImage() {
-            const imageElement = document.createElement("img");
-            imageElement.src = this.image;
-            imageElement.alt = this.alt;
-            return imageElement;
-        }
-
-        getText() {
-            const textElement = document.createElement("div");
-            textElement.classList.add('menu__item-descr');
-            textElement.textContent = this.text;
-            return textElement;
-        }
-
-        getDivider() {
-            const dividerElement = document.createElement("div");
-            dividerElement.classList.add('menu__item-divider');
-            return dividerElement;
-        }
-
-        getPrice() {
-            const priceElement = document.createElement("div"),
-                  costTitleElement = document.createElement("div"),
-                  totalElement = document.createElement("div");
-
-            priceElement.classList.add('menu__item-price');
-            costTitleElement.classList.add('menu__item-cost');
-            totalElement.classList.add('menu__item-total');
-
-            totalElement.innerHTML = `<span>${this.price}</span> грн/день`;
-
-            priceElement.append(costTitleElement);
-            priceElement.append(totalElement);
-
-            return priceElement;
+            this.parentNode = document.querySelector(parentNode);
         }
 
         render() {
-            const parent = document.querySelector(this.parentNode);
             const element = document.createElement("div");
-            element.classList.add('menu__item');
-            element.append(this.getImage());
-            element.append(this.getTitle());
-            element.append(this.getText());
-            element.append(this.getDivider());
-            element.append(this.getPrice());
+            element.classList.add("menu__item");
+            element.innerHTML = `<img src="${this.image}" alt="${this.altImage}">
+            <h3 class="menu__item-subtitle">${this.title}</h3>
+            <div class="menu__item-descr">${this.text}</div>
+            <div class="menu__item-divider"></div>
+            <div class="menu__item-price">
+                <div class="menu__item-cost">Цена:</div>
+                <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+            </div>`;
 
-            parent.append(element);
+            this.parentNode.append(element);
         }
     }
 
-    new MenuItem("title", "loremloremloremloremlorem", "img/tabs/vegy.jpg", "vegy", 234, ".menu .container").render();
+    new MenuItem("Vegy dish", "loremloremloremloremloreml oremloremloremlorem loremloremlorem loremloremlorem", "img/tabs/vegy.jpg", "vegy", 234, ".menu .container").render();
+    new MenuItem("Post dish", "loremloremloremloremloreml oremloremloremlorem loremloremlorem loremloremlorem", "img/tabs/post.jpg", "post", 130, ".menu .container").render();
+    new MenuItem("Elite dish", "loremloremloremloremlorem loremloremloremlorem loremloremlorem loremloremlorem", "img/tabs/elite.jpg", "elite", 500, ".menu .container").render();
 });
