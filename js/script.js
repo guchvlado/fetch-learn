@@ -162,6 +162,7 @@ window.addEventListener("DOMContentLoaded", () => {
             } else {
                 this.classes.forEach(classItem => element.classList.add(classItem));
             }
+            this.changeToRUB();
             
             element.innerHTML = `<img src="${this.image}" alt="${this.altImage}">
             <h3 class="menu__item-subtitle">${this.title}</h3>
@@ -169,17 +170,28 @@ window.addEventListener("DOMContentLoaded", () => {
             <div class="menu__item-divider"></div>
             <div class="menu__item-price">
                 <div class="menu__item-cost">Цена:</div>
-                <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
             </div>`;
 
             this.parentNode.append(element);
         }
     }
+    const getData = async (url) => {
+        const result = await fetch(url);
 
-    new MenuItem("Vegy dish", "loremloremloremloremloreml oremloremloremlorem loremloremlorem loremloremlorem", "img/tabs/vegy.jpg", "vegy", 234, ".menu .container").render();
-    new MenuItem("Post dish", "loremloremloremloremloreml oremloremloremlorem loremloremlorem loremloremlorem", "img/tabs/post.jpg", "post", 130, ".menu .container").render();
-    new MenuItem("Elite dish", "loremloremloremloremlorem loremloremloremlorem loremloremlorem loremloremlorem", "img/tabs/elite.jpg", "elite", 500, ".menu .container").render();
+        if (!result.ok) {
+            throw new Error(`Could not fetch ${url}. Status: ${result.status}`);
+        }
 
+        return await result.json();
+    };
+
+    getData('http://localhost:3000/menu')
+    .then(data => {
+        data.forEach(({title, descr, img, altimg, price}) => {
+            new MenuItem(title, descr, img, altimg, price, '.menu .container').render();
+        });
+    });
     //AJAX
 
     // const requestWord = new XMLHttpRequest();
@@ -205,6 +217,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
     forms.forEach((item) => {postForm(item)});
 
+    const postData = async (url, data) => {
+        const result = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: data
+        });
+
+        return await result.json();
+    };
+
     function postForm(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -217,19 +241,11 @@ window.addEventListener("DOMContentLoaded", () => {
             form.after(spinner);
 
             const formData = new FormData(form);
-            const obj = {};
-            formData.forEach((value, key) => {
-                obj[key] = value;
-            });
 
-            fetch('server.php', {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: JSON.stringify(obj)
-            })
-            .then(data => data.text())
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+            
+            postData('http://localhost:3000/requests', json)
             .then(data => {
                 showThanksModal(messages.success);
                 console.log(data);
@@ -274,5 +290,45 @@ window.addEventListener("DOMContentLoaded", () => {
             closeModal();
         }, 5000);
     }
+
+    //Slider
+
+
+    const sliderContainer = document.querySelector('.offer__slider'),
+          sliderItems = sliderContainer.querySelectorAll('.offer__slide'),
+          prevSliderButton = sliderContainer.querySelector('.offer__slider-prev'),
+          nextSliderButton = sliderContainer.querySelector('.offer__slider-next'),
+          currentSlide = sliderContainer.querySelector('#current'),
+          totalSlide = sliderContainer.querySelector('#total');
+          
+    let counterSlider = 0;
+
+    totalSlide.textContent = (sliderItems.length < 10) ? '0' + sliderItems.length : sliderItems.length;
+
+    function showSlide(index) {
+        sliderItems.forEach(item => item.style.display = 'none');
+        sliderItems[index].classList.add('fade');
+
+        currentSlide.textContent = (index < 9) ? '0' + (index + 1) : index + 1;
+        sliderItems[index].style.display = 'block';
+    }
+
+    nextSliderButton.addEventListener('click', () => {
+        counterSlider++;
+        if (counterSlider > sliderItems.length - 1) {
+            counterSlider = 0;
+        }
+        showSlide(counterSlider);
+    });
+
+    prevSliderButton.addEventListener('click', () => {
+        counterSlider--;
+        if (counterSlider < 0) {
+            counterSlider = sliderItems.length - 1;
+        }
+        showSlide(counterSlider);
+    });
+
+    showSlide(0);
 
 });
