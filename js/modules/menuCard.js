@@ -1,3 +1,5 @@
+import {getData} from '../services/services';
+
 function menuCard() {
     // classes / menu item
 
@@ -40,15 +42,6 @@ function menuCard() {
             this.parentNode.append(element);
         }
     }
-    const getData = async (url) => {
-        const result = await fetch(url);
-
-        if (!result.ok) {
-            throw new Error(`Could not fetch ${url}. Status: ${result.status}`);
-        }
-
-        return await result.json();
-    };
 
     getData('http://localhost:3000/menu')
         .then(data => {

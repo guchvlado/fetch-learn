@@ -1,15 +1,14 @@
-function slider() {
-    //Slider
+function slider({containerSelector, slideSelector, nextSelector, prevSelector, currentId, totalId, wrapperSelector, fieldSelector}) {
 
-
-    const sliderContainer = document.querySelector('.offer__slider'),
-        sliderItems = sliderContainer.querySelectorAll('.offer__slide'),
-        prevSliderButton = sliderContainer.querySelector('.offer__slider-prev'),
-        nextSliderButton = sliderContainer.querySelector('.offer__slider-next'),
-        currentSlide = sliderContainer.querySelector('#current'),
-        totalSlide = sliderContainer.querySelector('#total'),
-        sliderWrapper = sliderContainer.querySelector('.offer__slider-wrapper'),
-        sliderField = sliderContainer.querySelector('.offer__slider-inner');
+    const sliderContainer = document.querySelector(containerSelector),
+        sliderItems = sliderContainer.querySelectorAll(slideSelector),
+        prevSliderButton = sliderContainer.querySelector(prevSelector),
+        nextSliderButton = sliderContainer.querySelector(nextSelector),
+        currentSlide = sliderContainer.querySelector(currentId),
+        totalSlide = sliderContainer.querySelector(totalId),
+        sliderWrapper = sliderContainer.querySelector(wrapperSelector),
+        sliderField = sliderContainer.querySelector(fieldSelector);
+            
     let slideIndex = 1;
     let offset = 0;
     let dots = [];

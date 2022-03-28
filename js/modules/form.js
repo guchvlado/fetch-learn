@@ -1,4 +1,7 @@
-function form() {
+import {openModal, closeModal} from './modal';
+import {postData} from '../services/services';
+
+function form(formSelector, timerModalId) {
         //AJAX
 
     // const requestWord = new XMLHttpRequest();
@@ -15,7 +18,7 @@ function form() {
     //     }
     // });
 
-    const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll(formSelector);
     const messages = {
         loading: "img/spinner.svg",
         success: "Спасибо, мы вам перезвоним",
@@ -25,18 +28,6 @@ function form() {
     forms.forEach((item) => {
         postForm(item)
     });
-
-    const postData = async (url, data) => {
-        const result = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: data
-        });
-
-        return await result.json();
-    };
 
     function postForm(form) {
         form.addEventListener('submit', (e) => {
@@ -92,11 +83,11 @@ function form() {
 
         prevModalDialog.classList.add('hide');
         prevModalDialog.after(thanksModal);
-        openModal();
+        openModal('.modal', timerModalId);
         setTimeout(() => {
             thanksModal.remove();
             prevModalDialog.classList.remove('hide');
-            closeModal();
+            closeModal('.modal');
         }, 5000);
     }
 }
